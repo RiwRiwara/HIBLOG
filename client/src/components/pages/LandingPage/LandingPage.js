@@ -7,7 +7,7 @@ export default function LandingPage() {
   return (
     <main className="p-2">
       <div className="container ">
-       
+        
       </div>
     </main>
   );

@@ -1,0 +1,61 @@
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 8.8rem;
+}
+.profile-container button{
+    padding: 5px;
+    border: 1px solid #503A85;
+    border-radius: 4px;
+    background-color: #CDBCF3;
+}
+.email-ctn button{
+    margin-left: 10px;
+}
+.email-ctn input{
+    padding: 8px;
+    border: 1px solid #503A85;
+    border-radius: 4px;
+    background-color: #CDBCF3;
+    width: 300px;
+}
+
+.change-password-btn {
+    padding: 5px;
+    border: 1px solid #503A85;
+    border-radius: 4px;
+    background-color: #CDBCF3;
+    margin-bottom: 15px;
+}
+
+.save-password-btn {
+    background-color: #CDBCF3;
+    color: #503A85;
+    border: none;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.input-container label {
+    margin-top: 5px;
+}
+
+.input-container input {
+    padding: 8px;
+    border: 1px solid #503A85;
+    border-radius: 4px;
+    background-color: #CDBCF3;
+    width: 300px;
+}
+
+.input-container button {
+    padding: 5px;
+    border: 1px solid #503A85;
+    border-radius: 4px;
+    background-color: #CDBCF3;
+    width: 100px;
+}
