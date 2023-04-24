@@ -19,14 +19,10 @@ export default function FromComponent() {
   const submitForm = (e) => {
     e.preventDefault();
     axios
-      .post(`${process.env.REACT_APP_API}/create`, { title, content, author })  
+      .post(`${process.env.REACT_APP_API}/create`, { title, content, author })
       .then((response) => {
-        Swal.fire(
-          "Notification",
-          "Create Complete!",
-          "success"
-        );
-        setState({...state, title:"", content:"",author:""});
+        Swal.fire("Notification", "Create Complete!", "success");
+        setState({ ...state, title: "", content: "", author: "" });
       })
       .catch((err) => {
         Swal.fire("Notification", err.response.data.error, "error");

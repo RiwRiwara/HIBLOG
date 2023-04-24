@@ -28,10 +28,10 @@ function Blogs() {
       {blogs.map((blog, index) => (
         <div className="row" key={index} style={{borderBottom: '1px solid silver'}}>
           <div className="col pt-3 pb-2">
-            <Link to={`${blog.slug}`}>
+            <Link to={`blogs/${blog.slug}`}>
             <h3>{blog.title}</h3>
             </Link>
-            <p>{blog.content.substring(0,100)}. . .<Link to={`${blog.slug}`}>more</Link></p>
+            <p>{blog.content.substring(0,100)}. . .<Link to={`blogs/${blog.slug}`}>more</Link></p>
             <p className="text-muted">Author : {blog.author}, Public : {new Date(blog.createdAt).toLocaleString()}</p>
           </div>
         </div>
