@@ -1,0 +1,22 @@
+# Base Image
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy app files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install && \
+    npm install -g nodemon && \
+    npm prune --production
+
+# Copy source files
+COPY . .
+
+# Expose port
+EXPOSE 5500
+
+# Start server
+CMD ["npm", "start"]
