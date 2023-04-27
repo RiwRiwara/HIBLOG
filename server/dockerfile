@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy app files
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies and nodemon globally and prune dev dependencies
 RUN npm install && \
     npm install -g nodemon && \
     npm prune --production
