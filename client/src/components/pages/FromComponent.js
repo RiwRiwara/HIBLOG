@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import {  useNavigate} from "react-router-dom";
 
 export default function FromComponent() {
   const [state, setState] = useState({
@@ -10,6 +11,7 @@ export default function FromComponent() {
     author: "",
   });
   const { title, content, author } = state;
+  const navigate = useNavigate();
 
   //Define value in state
   const inputValue = (name) => (event) => {
@@ -23,13 +25,21 @@ export default function FromComponent() {
       .then((response) => {
         Swal.fire("Notification", "Create Complete!", "success");
         setState({ ...state, title: "", content: "", author: "" });
+        goBackPage()
       })
       .catch((err) => {
         Swal.fire("Notification", err.response.data.error, "error");
       });
   };
+  const goBackPage = () => navigate('/blogs');
+
   return (
+    <div>
     <div className="container p-5">
+    <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="/blogs">Main</a>
+        <span class="breadcrumb-item active" aria-current="page">Active</span>
+      </nav>
       <h1>Write Blog</h1>
       <form onSubmit={submitForm}>
         <div className="mb-3">
@@ -71,10 +81,14 @@ export default function FromComponent() {
             onChange={inputValue("author")}
           />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
+        <div className="login-bt mb-2">
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </div>
+
       </form>
+    </div>
     </div>
   );
 }

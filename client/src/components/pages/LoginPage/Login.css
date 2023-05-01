@@ -14,7 +14,7 @@
   .input-container {
     position: relative;
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 0.rem;
   }
   .login-bt button{
     background-color: #503a85;
@@ -23,6 +23,6 @@
     padding: 10px;
     border-radius: 4px;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 0.2rem;
   }
   

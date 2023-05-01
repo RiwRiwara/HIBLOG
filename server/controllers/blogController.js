@@ -1,7 +1,8 @@
 // Call Database
 const slugify = require("slugify");
 const Blogs = require("../model/blogs")
-const {v4:uuidv4} = require('uuid')
+const {v4:uuidv4} = require('uuid');
+const blogs = require("../model/blogs");
 //create data
 exports.create = (req, res) => {
     const {title, content, author} = req.body;
@@ -12,10 +13,8 @@ exports.create = (req, res) => {
     switch(true){
         case !title:
             return res.status(400).json({error:"Title require"})
-            break
         case !content:
             return res.status(400).json({error:"Content require"})
-            break
 
     }
 
@@ -52,3 +51,28 @@ exports.singleBlog = async (req, res) => {
     res.status(500).json({ error: "An error occurred while fetching the blog." });
   }
 };
+
+
+exports.remove=(req, res) => {
+  const {slug} = req.params
+  try{
+    Blogs.findOneAndRemove({slug}).exec();
+    res.json({
+      message : "Blog has been deleted."
+    })
+  }catch (err){
+    console.log(err)
+  }
+
+}
+
+exports.update=(req, res) => {
+  const {slug} = req.params
+  // Send data => title content, author
+  const {title, content, author} = req.body
+  Blogs.findOneAndUpdate({slug}, {title, content, author}, {new:true}).exec().then((blog) => {
+    res.json(blog);
+  }).catch((err) => {
+    console.log(err)
+  });
+}

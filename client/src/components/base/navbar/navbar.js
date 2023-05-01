@@ -25,17 +25,17 @@ function Navbar() {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <a className="nav-link custom-color" href="/">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link custom-color" href="/profile">
-                  Profile
+                  Blog
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link custom-color" href="/create">
                   Create Blog
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link custom-color" href="/profile">
+                  Profile
                 </a>
               </li>
             </ul>
