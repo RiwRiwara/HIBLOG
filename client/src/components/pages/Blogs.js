@@ -1,5 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import "./style.css"
+import { getUser } from "../../services/authorize";
+import Navbar from "../base/navbar/navbar";
 
 function Blogs() {
   const [blogs, setBlogs] = useState([]);
@@ -20,13 +23,18 @@ function Blogs() {
 
 
   return (
+    <div><Navbar/>
+    
     <div className="container mt-4">
       <div className="h1 mb-3 fw-bold">Blogs</div>
-      <a className="custom-color" href="/create">
-        <button type="" className="btn btn-primary w-100">
-          Create blog
-        </button>
-      </a>
+      {getUser() &&
+        <a className="custom-color" href="/create">
+          <button type="" className="btn btn-primary w-100 customBtn">
+            Create blog
+          </button>
+        </a>
+      }
+
 
       {blogs.map((blog, index) => (
         <div className="row" key={index} style={{ borderBottom: '1px solid silver' }}>
@@ -35,11 +43,13 @@ function Blogs() {
               <h3>{blog.title}</h3>
             </a>
 
-            <p>{blog.content.substring(0, 100)}. . .<a href={`blogs/${blog.slug}`}>more</a></p>
-            <p className="text-muted">Author : {blog.author}, Public : {new Date(blog.createdAt).toLocaleString()}</p>
+            <p>{<div dangerouslySetInnerHTML={{ __html: (blog.content.substring(0, 200)) }} />}. . .<a href={`blogs/${blog.slug}`}>more</a></p>
+
+            <p className="text-muted">Author : {blog.author}, Public : {new Date(blog.updatedAt).toLocaleString()}</p>
           </div>
         </div>
       ))}
+    </div>
     </div>
   );
 }

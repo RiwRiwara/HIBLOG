@@ -5,7 +5,7 @@ const mongoose = require("mongoose")
 const http = require("http")
 require("dotenv").config() 
 const blogRoute = require("./routes/blog")
-
+const authRoute = require("./routes/auth")
 
 const app = express()
 const PORT = 5500 || 5000;
@@ -34,5 +34,6 @@ app.get('/', (req, res)=>{
 })
 //route
 app.use('/api', blogRoute)
+app.use('/api', authRoute)
 
 module.exports = app

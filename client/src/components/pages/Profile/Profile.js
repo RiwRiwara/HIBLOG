@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Profile.css';
+import Navbar from '../../base/navbar/navbar';
 
 function Profile() {
   const [email, setEmail] = useState('user@example.com');
@@ -33,6 +34,8 @@ function Profile() {
   };
 
   return (
+    <div>
+      <Navbar/>
     <div className="profile-container">
       <h1>My Profile </h1>
       <p>Username: <strong>user123</strong></p>
@@ -94,6 +97,7 @@ function Profile() {
           </div>
         </form>
       )}
+    </div>
     </div>
   );
 }

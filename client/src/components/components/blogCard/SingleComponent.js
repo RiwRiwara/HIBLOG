@@ -2,6 +2,12 @@ import { useParams, useNavigate} from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import "./style.css"
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
+import Navbar from "../../base/navbar/navbar";
+import { getUser } from "../../../services/authorize";
+
 const SingleComponent = () => {
   const { slug } = useParams();
   const [blog, setBlog] = useState("");
@@ -13,6 +19,7 @@ const SingleComponent = () => {
       .get(`${process.env.REACT_APP_API}/blogs/${slug}`)
       .then((response) => {
         setBlog(response.data);
+        setContent(response.data.content)
       })
       .catch((err) => {
         alert(err);
@@ -23,9 +30,15 @@ const SingleComponent = () => {
     setEditMode(!editMode);
   };
 
+
+  const [content, setContent] = useState('')
+
+  const submitContent = (event) => {
+    setContent(event)
+  }
   const saveBlog = () => {
     axios
-    .put(`${process.env.REACT_APP_API}/blogs/${slug}`, {title: blog.title, content: blog.content, author: blog.author})
+    .put(`${process.env.REACT_APP_API}/blogs/${slug}`, {title: blog.title, content: content, author: blog.author})
     .then(res=>{
       Swal.fire("Update!", "Data has updated","success")
     }).catch(err=>{
@@ -57,21 +70,30 @@ const SingleComponent = () => {
   }
 
 
-  
+
   return (
-    <div className="container p-3">
+    <div>
+      <Navbar/>
+      <div className="container p-3">
+          <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="/blogs">Blog</a>
+        <span class="breadcrumb-item active" aria-current="page">Blog : {blog.title} {new Date(blog.updatedAt).toLocaleString()}</span>
+      </nav>
+      {getUser() &&
       <div className="text-end">
-        <div class="dropdown open mb-3 ">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            Action
-          </button>
-          <div class="dropdown-menu" aria-labelledby="triggerId">
-            <button class="dropdown-item" onClick={()=>updateBlog()}>Update</button>
-            <button class="dropdown-item" onClick={()=>confirmDelete(blog)}>Delete</button>
-          </div>
+      <div class="dropdown open mb-2 ">
+        <button class="btn btn-secondary dropdown-toggle vcolor" type="button" id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
+          Action
+        </button>
+        <div class="dropdown-menu" aria-labelledby="triggerId">
+          <button class="dropdown-item" onClick={()=>updateBlog()}>Update</button>
+          <button class="dropdown-item" onClick={()=>confirmDelete(blog)}>Delete</button>
         </div>
       </div>
+    </div>
+      }
+      
 
       <div className="card container">
         <div className="card-body">
@@ -94,22 +116,28 @@ const SingleComponent = () => {
             <h4 className="card-subtitle mb-2 text-muted">{blog.author}</h4>
           )}
           {editMode ? (
-            <textarea
-              className="form-control"
-              defaultValue={blog.content}
-              onChange={(e) => setBlog({ ...blog, content: e.target.value })}
-            />
+            <ReactQuill
+            value={content}
+            onChange={submitContent}
+            theme="snow"
+            placeholder="My story . . ."
+
+          />
           ) : (
-            <p className="card-text">{blog.content}</p>
+            
+
+            <div dangerouslySetInnerHTML={{ __html: content}} />
           )}
           {editMode && (
-            <button className="btn btn-primary mt-3" onClick={saveBlog}>
+            <button className="btn btn-primary mt-3 customBtn" onClick={saveBlog}>
               Save
             </button>
           )}
         </div>
       </div>
     </div>
+    </div>
+   
   );
 };
 
