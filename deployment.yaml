@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-server
+  template:
+    metadata:
+      labels:
+        app: myapp-server
+    spec:
+      containers:
+        - name: myapp-node-server
+          image: hiblogimg.azurecr.io/myapp-server
+          command: ["npm", "start"]
+          env:
+            - name: NODE_ENV
+              value: development
+          ports:
+            - containerPort: 5500
+          volumeMounts:
+            - name: server-vol
+              mountPath: /usr/src/app
+            - name: node-modules
+              mountPath: /usr/src/app/node_modules
+      imagePullSecrets:
+        - name: hiblogsecret
+      volumes:
+        - name: server-vol
+          hostPath:
+            path: /data/myapp/server
+        - name: node-modules
+          emptyDir: {}
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-autoscaler-server
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp-server
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-client
+  template:
+    metadata:
+      labels:
+        app: myapp-client
+    spec:
+      containers:
+        - name: myapp-react-client
+          image: hiblogimg.azurecr.io/myapp-client
+          command: ["npm", "start"]
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: client-vol
+              mountPath: /usr/app
+            - name: node-modules
+              mountPath: /usr/app/node_modules
+      imagePullSecrets:
+        - name: hiblogsecret
+      volumes:
+        - name: client-vol
+          hostPath:
+            path: /data/myapp/client
+        - name: node-modules
+          emptyDir: {}
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-autoscaler-client
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp-client
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+      volumes:
+        - name: mongo-data
+          hostPath:
+            path: /data/myapp/mongo
+---
+

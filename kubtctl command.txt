@@ -1,0 +1,40 @@
+สร้าง aks cluster
+เชื่อมต่อกับ aks
+az login
+az aks get-credentials --resource-group <resource-group-name> --name <aks-cluster-name>
+
+push image ขึ้น acr
+เข้าสู่ ACR โดยใช้คำสั่ง docker login
+docker login hiblogimg.azurecr.io
+docker tag mongo hiblogimg.azurecr.io/mongo
+docker tag myapp-client hiblogimg.azurecr.io/myapp-client
+docker tag myapp-server hiblogimg.azurecr.io/myapp-server
+docker push hiblogimg.azurecr.io/mongo
+docker push hiblogimg.azurecr.io/myapp-client
+docker push hiblogimg.azurecr.io/myapp-server
+
+เชื่อมต่อกับ AKS โดยใช้คำสั่ง
+az aks get-credentials --resource-group <resource-group-name> --name <aks-cluster-name>
+สร้าง Kubernetes Secret สำหรับ ACR โดยแทนค่าตามข้อมูลด้านล่างตามความเหมาะสม
+kubectl create secret docker-registry <SECRET_NAME> --docker-server=<ACR_LOGIN_SERVER> --docker-username=<ACR_USERNAME> --docker-password=<ACR_PASSWORD> --docker-email=<EMAIL>
+โดยที่:
+<SECRET_NAME>: ชื่อของ Kubernetes Secret ที่ต้องการสร้าง เช่น hiblogsecret
+<ACR_LOGIN_SERVER>: ชื่อของ ACR login server ที่ใช้ เช่น hiblogimg.azurecr.io
+<ACR_USERNAME>: ชื่อผู้ใช้ของ ACR ที่มีสิทธิ์เข้าถึง image ใน ACR
+<ACR_PASSWORD>: รหัสผ่านของ ACR ที่เกี่ยวข้องกับ <ACR_USERNAME>
+<EMAIL>: อีเมล์ที่เกี่ยวข้องกับ ACR หรือ <ACR_USERNAME>
+
+kubectl create secret docker-registry hiblogsecret --docker-server=hiblogimg.azurecr.io --docker-username=hiblogimg --docker-password=Ui1lnycTO4J2bfiuD5XV/PcM87GxvhgtedO5jKWoIp+ACRAdFpfB --docker-email=kollawat.ruan@kmutt.ac.th
+ตรวจสอบการสร้าง Kubernetes Secret
+kubectl get secret hiblogsecret --output=yaml
+
+สร้าง Kubernetes Service
+kubectl apply -f service.yaml
+kubectl get service
+สร้าง Kubernetes Deployment
+kubectl apply -f deployment.yaml
+kubectl get deployment
+kubectl get pods
+
+deploy เสร็จเข้า web ผ่าน external ip ตามที่ขึ้นใน service
+test web ผ่าน apache-jmeter-5.5 โดยให้มี thred user 1000 คน
